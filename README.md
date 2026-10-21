@@ -1,6 +1,6 @@
 ﻿# Pinteresty Outfits Business Desk
 
-A local Flask and SQLite app for a clothing and accessories shop. It uses no external APIs or cloud services and binds to `127.0.0.1` only. Product photos, the database, and backups stay in the project’s local data folder.
+A Flask and SQLite app for a clothing and accessories shop. It can run locally on Windows or be deployed as a password-protected web app on Render. Local data stays in the project’s `instance/data` folder; the Render deployment stores data on its persistent disk.
 
 ## Windows setup
 
@@ -43,6 +43,18 @@ After installing requirements, run:
 ```
 
 Tests cover multiple line totals and discounts, historical price/cost snapshots, stock checks and restoration, payments, product search and photo handling, monthly reporting, valid `.xlsx` output, and backup/restore. Python compilation and SQLite schema initialization were checked during implementation. The application tests pass in the project virtual environment.
+
+## Deploy from GitHub to Render
+
+GitHub stores the source code; it does not run this Flask app. The included `render.yaml` configures a Render web service with a persistent disk and HTTP Basic Authentication. The service plan with a persistent disk is paid. Render free web services have temporary local storage, which would lose the SQLite database and uploaded images when the service restarts.
+
+1. Push the project to a GitHub repository.
+2. In Render, create a Blueprint and connect that GitHub repository. Render reads `render.yaml` and prompts for `APP_USERNAME` and `APP_PASSWORD`; set both to strong values and keep them private.
+3. Wait for the first deploy to finish. Render provides an `onrender.com` web address. Open it and sign in with the username and password you configured.
+4. To move your existing local data, create a ZIP from **Backup & Restore** in the local app. After signing in to the deployed app, upload that ZIP on its **Backup & Restore** page, then restart the service from Render.
+5. Later, push commits to the connected GitHub branch; Render will deploy them automatically.
+
+Keep the GitHub repository private if it contains business code you do not want to share. Do not commit the local SQLite database, customer information, product photos, or backup ZIPs. Keep Render credentials private. The hosted database and uploaded photos persist on Render’s disk; download backups regularly and store them somewhere separate.
 
 Sale line items and discounts cannot be edited in place. Void a mistaken order and create a corrected one so its audit trail and inventory remain understandable. The app does not handle refunds as separate transactions; enter any refund outside the app and retain the appropriate records.
 
