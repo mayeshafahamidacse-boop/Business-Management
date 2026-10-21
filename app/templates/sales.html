@@ -1,0 +1,5 @@
+﻿{% extends 'base.html' %}{% block body %}<section class="panel"><form method="get" class="formgrid"><label>Search name, phone or sale ID<input name="q" value="{{q}}"></label><label>From<input type="date" name="from" value="{{start}}"></label><label>To<input type="date" name="to" value="{{end}}"></label><button>Search</button></form><table><tr><th>Sale</th><th>Date</th><th>Customer</th><th>Items</th><th>Total</th><th>Paid</th><th>Balance</th><th>Status</th></tr>{% for s in sales %}<tr><td><a href="/sales/{{s.id}}">#{{s.id}}</a></td><td>{{s.created_at}}</td><td>{{s.customer_name}}<br>{{s.customer_phone}}</td><td>{{s.items}}</td><td>&#2547;{{s.total}}</td><td>&#2547;{{s.paid}}</td><td>&#2547;{{s.total-s.paid}}</td><td>{% if s.status=='Voided' %}Voided{% elif s.paid==0 %}Unpaid{% elif s.paid<s.total %}Partially paid{% else %}Paid{% endif %}</td></tr>{% else %}<tr><td colspan="8">No sales found</td></tr>{% endfor %}</table></section>{% endblock %}
+
+
+
+
